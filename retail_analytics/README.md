@@ -1,15 +1,56 @@
-Welcome to your new dbt project!
+# 🛒 Retail Analytics Project
 
-### Using the starter project
+Plateforme d'analyse e-commerce avec dbt et Snowflake en adoptant une architecture médaillon (Bronze/Silver/Gold).
 
-Try running the following commands:
-- dbt run
-- dbt test
+## 📋 Structure du projet
+```
+retail_analytics/
+├── models/
+│   ├── staging/          # Tables sources nettoyées (Bronze)
+│   ├── intermediate/     # Transformations intermédiaires (Silver)
+│   └── marts/           # Tables finales pour analytics (Gold)
+├── tests/               # Tests de qualité
+├── macros/              # Fonctions réutilisables
+└── snapshots/           # Historisation des données
+```
 
+## Démarrage rapide
+```bash
+# Charger les variables d'environnement
+source .env
 
-### Resources:
-- Learn more about dbt [in the docs](https://docs.getdbt.com/docs/introduction)
-- Check out [Discourse](https://discourse.getdbt.com/) for commonly asked questions and answers
-- Join the [chat](https://community.getdbt.com/) on Slack for live discussions and support
-- Find [dbt events](https://events.getdbt.com) near you
-- Check out [the blog](https://blog.getdbt.com/) for the latest news on dbt's development and best practices
+# Installer les dépendances
+dbt deps
+
+# Tester la connexion
+dbt debug
+
+# Exécuter les modèles
+dbt run
+
+# Lancer les tests
+dbt test
+```
+
+## Documentation
+
+Générer et voir la documentation :
+```bash
+dbt docs generate
+dbt docs serve
+```
+
+## Architecture
+
+- **Staging** : Nettoyage et standardisation
+- **Intermediate** : Logique métier complexe
+- **Marts** : Tables finales optimisées
+
+## Checklist de développement
+
+- [ ] Configurer Snowflake
+- [ ] Créer les sources dans staging
+- [ ] Développer les modèles intermediate
+- [ ] Créer les marts finaux
+- [ ] Ajouter les tests
+- [ ] Documenter les modèles
