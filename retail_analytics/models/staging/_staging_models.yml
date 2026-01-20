@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: stg_customers
+    description: "Modèle staging des clients avec nettoyage et standardisation"
+    columns:
+      - name: customer_id
+        description: "Clé primaire unique du client"
+        tests:
+          - unique
+          - not_null
+      - name: customer_email
+        tests:
+          - not_null
+      - name: customer_segment
+        tests:
+          - accepted_values:
+              values: ['premium', 'standard', 'vip']
+  
+  - name: stg_orders
+    description: "Modèle staging des commandes"
+    columns:
+      - name: order_id
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+      - name: order_status
+        tests:
+          - accepted_values:
+              values: ['completed', 'cancelled', 'pending', 'refunded']
+      - name: total_amount
+        tests:
+          - not_null
+          - dbt_utils.expression_is_true:
+              expression: ">= 0"
+  
+  - name: stg_order_items
+    description: "Modèle staging des articles de commande"
+    columns:
+      - name: item_id
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        tests:
+          - relationships:
+              to: ref('stg_orders')
+              field: order_id
+      - name: product_id
+        tests:
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+  
+  - name: stg_products
+    description: "Modèle staging des produits"
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null

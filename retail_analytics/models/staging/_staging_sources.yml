@@ -1,0 +1,41 @@
+version: 2
+
+sources:
+  - name: raw_retail
+    description: "Données brutes de la plateforme e-commerce"
+    database: retail_db
+    schema: dbt_dev
+    tables:
+      - name: raw_customers
+        description: "Table des clients contenant les données brutes"
+        columns:
+          - name: customer_id
+            tests:
+              - unique
+              - not_null
+          - name: email
+            tests:
+              - not_null
+      - name: raw_orders
+        description: "Commandes clients"
+        columns:
+          - name: order_id
+            tests:
+              - unique
+              - not_null
+          - name: customer_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw_retail', 'raw_customers')
+                  field: customer_id
+      - name: raw_order_items
+        description: "Détails des articles commandés"
+      - name: raw_products
+        description: "Catalogue des produits"
+      - name: raw_inventory
+        description: "Données d'inventaire"
+      - name: raw_marketing_campaigns
+        description: "Campagnes marketing"
+      - name: raw_web_events
+        description: "Événements web et interactions utilisateurs"
