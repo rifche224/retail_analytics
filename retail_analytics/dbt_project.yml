@@ -29,7 +29,7 @@ models:
       
     # Intermediate layer
     intermediate:
-      +materialized: ephemeral
+      +materialized: view
       +schema: intermediate
       +tags: ["intermediate"]
       

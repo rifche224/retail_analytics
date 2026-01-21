@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: int_customers_orders
+    description: "Clients enrichis avec leurs commandes complétées"
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+      - name: order_id
+        tests: [] 
