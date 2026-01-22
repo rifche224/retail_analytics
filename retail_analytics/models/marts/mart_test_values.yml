@@ -1,0 +1,63 @@
+version: 2
+models:
+  - name: mart_sales_daily
+    description: "Mart des ventes journalières"
+    columns:
+      - name: date_day
+        tests:
+          - not_null
+      - name: total_revenue
+        tests:
+          - not_null
+          - test_positive_values
+      - name: net_revenue
+        tests:
+          - not_null
+          - test_positive_values
+
+  - name: mart_campaign_performance
+    description: "KPIs marketing : commandes, revenus, profit et ROI par campagne"
+    columns:
+      - name: campaign_id
+        tests:
+          - not_null
+          - unique
+      - name: total_attributed_orders
+        tests:
+          - not_null
+          - test_positive_values
+      - name: total_revenue
+        tests:
+          - not_null
+          - test_positive_values
+      - name: total_profit
+        tests:
+          - not_null
+          - test_positive_values
+      - name: roi_percentage
+        tests:
+          - not_null
+          - test_positive_values
+  - name: mart_product_performance
+    description: "KPI produit : ventes, revenus et profit"
+    columns:
+      - name: product_id
+        tests:
+          - not_null
+          - unique
+      - name: orders_count
+        tests:
+          - not_null
+          - test_positive_values
+      - name: units_sold
+        tests:
+          - not_null
+          - test_positive_values
+      - name: total_revenue
+        tests:
+          - not_null
+          - test_positive_values
+      - name: total_profit
+        tests:
+          - not_null
+          - test_positive_values

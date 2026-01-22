@@ -25,7 +25,7 @@ SELECT
         o.order_channel,
         o.total_amount,
         o.shipping_cost,
-        o.net_amount,
+        coalesce(o.net_amount, 0) AS net_amount,
         current_timestamp as _dbt_loaded_at
 FROM customers c
 LEFT JOIN orders o

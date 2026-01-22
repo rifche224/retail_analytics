@@ -9,3 +9,60 @@ models:
           - not_null
       - name: order_id
         tests: [] 
+  - name: int_customer_lifetime_value
+    description: "Metrics clients : total_orders, lifetime_value, avg_order_value, tenure"
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - unique
+      - name: total_orders
+        tests:
+          - not_null
+          - test_positive_values
+      - name: lifetime_value
+        tests:
+          - not_null
+          - test_positive_values
+      - name: avg_order_value
+        tests:
+          - not_null
+          - test_positive_values
+      - name: customer_tenure_days
+        tests:
+          - not_null
+          - test_positive_values
+
+  - name: int_customers_orders
+    description: "Jointure clients x commandes"
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+      - name: order_id
+        tests:
+          - not_null
+          - test_no_duplicate_orders
+      - name: total_amount
+        tests:
+          - not_null
+          - test_positive_values
+      - name: net_amount
+        tests:
+          - not_null
+          - test_positive_values
+
+  - name: int_campaign_attributed_orders
+    description: "Commandes attribuées aux campagnes marketing"
+    columns:
+      - name: order_id
+        tests:
+          - not_null
+          - test_no_duplicate_orders
+      - name: net_amount
+        tests:
+          - not_null
+          - test_positive_values
+      - name: cost_attribution
+        tests:
+          - test_positive_values

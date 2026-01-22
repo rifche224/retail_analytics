@@ -48,8 +48,7 @@ final AS (
         campaign_id,
         last_campaign_touch,
         CASE 
-            WHEN campaign_id IS NOT NULL THEN 
-                net_amount * 0.05 
+            WHEN campaign_id IS NOT NULL THEN net_amount * 0.05 
         END AS cost_attribution
     FROM joined
     QUALIFY rn = 1 OR rn IS NULL
