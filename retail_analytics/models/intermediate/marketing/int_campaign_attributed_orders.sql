@@ -1,8 +1,8 @@
-{{ 
-config(
-    materialized='view',
-    schema='intermediate'
-)
+{{
+    config(
+        materialized='view',
+        schema='intermediate'
+    )
 }}
 
 WITH web_events AS (
@@ -33,18 +33,26 @@ joined AS (
         ) AS rn
     FROM orders o
     LEFT JOIN web_events we
-    ON we.customer_id = o.customer_id
-    AND we.event_timestamp <= o.order_date
-    AND we.event_timestamp >= o.order_date - INTERVAL '7 days'
+        ON we.customer_id = o.customer_id
+        AND we.event_timestamp <= o.order_date
+        AND we.event_timestamp >= o.order_date - INTERVAL '7 days'
+),
+
+final AS (
+    SELECT
+        order_id,
+        customer_id,
+        order_date,
+        total_amount,
+        net_amount,
+        campaign_id,
+        last_campaign_touch,
+        CASE 
+            WHEN campaign_id IS NOT NULL THEN 
+                net_amount * 0.05 
+        END AS cost_attribution
+    FROM joined
+    QUALIFY rn = 1 OR rn IS NULL
 )
 
-SELECT
-    order_id,
-    customer_id,
-    order_date,
-    total_amount,
-    net_amount,
-    campaign_id,
-    last_campaign_touch
-FROM joined
-QUALIFY rn = 1 OR rn IS NULL
+SELECT * FROM final
