@@ -25,7 +25,7 @@ cohort_data AS (
     SELECT
         cc.cohort_month,
         om.order_month,
-        datediff('month', cc.cohort_month, om.order_month) AS months_since_registration,
+        COALESCE(datediff('month', cc.cohort_month, om.order_month), 0) AS months_since_registration,
         count(DISTINCT om.customer_id) AS customers
     FROM customer_cohorts cc
     LEFT JOIN order_months om ON cc.customer_id = om.customer_id
