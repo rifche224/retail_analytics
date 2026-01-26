@@ -4,9 +4,11 @@
 
 WITH source AS (
     SELECT * FROM {{ source('raw_retail', 'raw_customers') }}
+    WHERE customer_id IS NOT NULL
+    AND email IS NOT NULL
 ),
 renamed AS (
-    SELECT
+    SELECT DISTINCT
         customer_id,
         email AS customer_email,
         first_name,
