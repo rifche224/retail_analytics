@@ -27,9 +27,9 @@ SELECT
     p.margin_per_unit,
     count(DISTINCT oi.order_id) AS orders_count,
     sum(oi.quantity) AS units_sold,
-    sum(oi.line_total) AS total_revenue,
-    sum(oi.quantity * p.cost_price) AS total_cost,
-    sum(oi.line_total - (oi.quantity * p.cost_price)) AS total_profit
+    coalesce(sum(oi.line_total), 0) AS total_revenue,
+    coalesce(sum(oi.quantity * p.cost_price), 0) AS total_cost,
+    coalesce(sum(oi.line_total - (oi.quantity * p.cost_price)), 0) AS total_profit
 FROM products p
 LEFT JOIN order_items oi ON p.product_id = oi.product_id
 LEFT JOIN orders o ON oi.order_id = o.order_id
