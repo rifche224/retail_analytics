@@ -24,7 +24,7 @@ joined AS (
         o.customer_id,
         o.order_date,
         o.total_amount,
-        o.net_amount,
+        coalesce(o.net_amount, 0) AS net_amount,
         we.campaign_id,
         we.event_timestamp AS last_campaign_touch,
         ROW_NUMBER() OVER (
@@ -44,7 +44,7 @@ final AS (
         customer_id,
         order_date,
         total_amount,
-        net_amount,
+        coalesce(net_amount, 0) AS net_amount,
         campaign_id,
         last_campaign_touch,
         CASE 
