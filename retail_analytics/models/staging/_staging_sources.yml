@@ -31,10 +31,36 @@ sources:
                   field: customer_id
       - name: raw_order_items
         description: "Détails des articles commandés"
+        columns:
+          - name: item_id
+            tests:
+              - unique
+              - not_null
+          - name: order_id
+            tests: 
+              - not_null
+              - relationships:
+                  to: source('raw_retail', 'raw_orders')
+                  field: order_id
       - name: raw_products
         description: "Catalogue des produits"
+        columns:
+          - name: product_id
+            tests:
+              - unique
+              - not_null
       - name: raw_inventory
-        description: "Données d'inventaire"
+        description: "Données d'inventaire liées aux produits"
+        columns:
+          - name: product_id
+            tests:
+              - not_null
+              - relationships:
+                  to: source('raw_retail', 'raw_products')
+                  field: product_id
+          - name: quantity_available
+            tests:
+              - not_null
       - name: raw_marketing_campaigns
         description: "Campagnes marketing"
       - name: raw_web_events

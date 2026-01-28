@@ -65,3 +65,41 @@ models:
         tests:
           - unique
           - not_null
+
+  - name: stg_inventory
+    description: "Modèle staging de l'inventaire par entrepôt"
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - product_id
+            - warehouse_location
+    columns:
+      - name: product_id
+        description: "Identifiant du produit"
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_products')
+              field: product_id
+
+      - name: warehouse_location
+        description: "Localisation de l'entrepôt"
+        tests:
+          - not_null
+
+      - name: quantity_available
+        description: "Quantité disponible en stock"
+        tests:
+          - not_null
+          - test_positive_values
+
+      - name: reorder_point
+        description: "Seuil de réapprovisionnement"
+        tests:
+          - not_null
+          - test_positive_values
+
+      - name: last_updated
+        description: "Date de dernière mise à jour de l'inventaire"
+        tests:
+          - not_null
