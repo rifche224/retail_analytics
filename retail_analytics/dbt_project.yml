@@ -16,6 +16,9 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
+vars:
+  euro_rate: 0.85
+
 models:
   retail_analytics:
     # Configuration globale
