@@ -16,7 +16,6 @@ customer_metrics AS (
 
 SELECT
     customer_id,
-
     count(DISTINCT order_id) AS total_orders,
 
     {% for channel in order_channels %}
