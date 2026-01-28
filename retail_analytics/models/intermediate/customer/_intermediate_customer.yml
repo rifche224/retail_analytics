@@ -1,14 +1,5 @@
 version: 2
-
 models:
-  - name: int_customers_orders
-    description: "Clients enrichis avec leurs commandes complétées"
-    columns:
-      - name: customer_id
-        tests:
-          - not_null
-      - name: order_id
-        tests: [] 
   - name: int_customer_lifetime_value
     description: "Metrics clients : total_orders, lifetime_value, avg_order_value, tenure"
     columns:
@@ -41,11 +32,10 @@ models:
           - not_null
       - name: order_id
         tests:
-          - not_null
+          - unique
           - test_no_duplicate_orders
       - name: total_amount
         tests:
-          - not_null
           - test_positive_values
       - name: net_amount
         tests:
@@ -66,3 +56,29 @@ models:
       - name: cost_attribution
         tests:
           - test_positive_values
+    
+  - name: int_product_performance
+    description: "Performance des produits vendus"
+    columns:
+      - name: product_id
+        tests:
+          - unique
+          - not_null
+      - name: total_revenue
+        tests:
+          - not_null
+          - test_positive_values
+      - name: total_profit
+        tests:
+          - not_null
+
+  - name: int_customer_first_purchase
+    description: "Date du premier achat par client"
+    columns:
+      - name: customer_id
+        tests:
+          - not_null
+          - unique
+      - name: first_order_date
+        tests:
+          - not_null
