@@ -1,6 +1,7 @@
+---
 name: CI - Tests dbt
 
-on:
+'on':
   pull_request:
     branches:
       - dev
@@ -16,27 +17,27 @@ jobs:
   test:
     name: Tests dbt
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11'
           cache: 'pip'
-      
+
       - name: Install dbt
         run: |
           pip install --upgrade pip
           pip install dbt-core dbt-snowflake
-      
+
       - name: Install dbt packages
         run: |
           cd retail_analytics
           dbt deps
-      
+
       - name: Configure dbt profile
         run: |
           mkdir -p ~/.dbt
@@ -55,35 +56,37 @@ jobs:
                 schema: dbt_ci_pr_${{ github.event.pull_request.number }}
                 threads: 4
           EOF
-      
+
       - name: Debug dbt
         run: |
           cd retail_analytics
           dbt debug
-      
+
       - name: Compile dbt models
         run: |
           cd retail_analytics
           dbt compile
-      
+
       - name: Run dbt models
         run: |
           cd retail_analytics
           dbt run --target ci
-      
+
       - name: Test dbt models
         run: |
           cd retail_analytics
           dbt test --target ci
-      
+
       - name: Generate documentation
         run: |
           cd retail_analytics
           dbt docs generate
-      
+
       - name: Cleanup CI schema
         if: always()
         continue-on-error: true
         run: |
           cd retail_analytics
-          dbt run-operation drop_ci_schema --args "{schema_name: dbt_ci_pr_${{ github.event.pull_request.number }}}"
+          SCHEMA_NAME="dbt_ci_pr_${{ github.event.pull_request.number }}"
+          dbt run-operation drop_ci_schema \
+            --args "{schema_name: ${SCHEMA_NAME}}"
