@@ -1,0 +1,89 @@
+name: Deploy to Dev
+
+on:
+  push:
+    branches:
+      - dev
+    paths:
+      - 'models/**'
+      - 'macros/**'
+      - 'tests/**'
+      - 'dbt_project.yml'
+      - 'packages.yml'
+
+jobs:
+  deploy-dev:
+    name: Deploy to Dev Environment
+    runs-on: ubuntu-latest
+    environment: dev
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+
+      - name: Install dbt
+        run: |
+          pip install --upgrade pip
+          pip install dbt-snowflake==1.7.0
+
+      - name: Install dbt packages
+        run: |
+          cd retail_analytics
+          dbt deps
+
+      - name: Configure dbt profile
+        run: |
+          mkdir -p ~/.dbt
+          cat > ~/.dbt/profiles.yml << EOF
+          retail_analytics:
+            target: dev
+            outputs:
+              dev:
+                type: snowflake
+                account: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+                user: ${{ secrets.SNOWFLAKE_USER }}
+                password: ${{ secrets.SNOWFLAKE_PASSWORD }}
+                role: ${{ secrets.SNOWFLAKE_ROLE }}
+                database: ${{ secrets.SNOWFLAKE_DATABASE }}
+                warehouse: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
+                schema: dbt_dev
+                threads: 8
+          EOF
+
+      - name: Run dbt models
+        run: |
+          cd retail_analytics
+          dbt run --target dev
+
+      - name: Test dbt models
+        run: |
+          cd retail_analytics
+          dbt test --target dev
+
+      - name: Generate and upload documentation
+        run: |
+          cd retail_analytics
+          dbt docs generate --target dev
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dbt-dev-artifacts
+          path: |
+            retail_analytics/target/manifest.json
+            retail_analytics/target/catalog.json
+            retail_analytics/target/run_results.json
+          retention-days: 30
+
+      - name: Deployment summary
+        run: |
+          echo "✅ Deployment to DEV completed successfully"
+          echo "📊 Environment: dev"
+          echo "🗄️ Schema: dbt_dev"
+          echo "📅 Date: $(date)"
