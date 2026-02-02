@@ -79,6 +79,6 @@ jobs:
 
       - name: Run summary
         run: |
-          echo "✅ Scheduled run completed"
-          echo "📅 Date: $(date)"
-          echo "⏰ Schedule: Daily at 6:00 UTC"
+          echo " Scheduled run completed"
+          echo "Date: $(date)"
+          echo "Schedule: Daily at 6:00 UTC"
