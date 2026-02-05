@@ -95,3 +95,4 @@ jobs:
           SCHEMA_NAME="dbt_ci_pr_${{ github.event.pull_request.number }}"
           dbt run-operation drop_ci_schema \
             --args "{schema_name: ${SCHEMA_NAME}}"
+
