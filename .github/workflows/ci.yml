@@ -12,6 +12,7 @@ on:
       - dev
       - main
     paths:
+      - '.github/workflows/**'
       - 'retail_analytics/models/**'
       - 'retail_analytics/macros/**'
       - 'retail_analytics/tests/**'
