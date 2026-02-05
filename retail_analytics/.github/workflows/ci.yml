@@ -12,11 +12,11 @@ on:
       - dev
       - main
     paths:
-      - 'retail_analytics/models/**'
-      - 'retail_analytics/macros/**'
-      - 'retail_analytics/tests/**'
-      - 'retail_analytics/dbt_project.yml'
-      - 'retail_analytics/packages.yml'
+      - 'models/**'
+      - 'macros/**'
+      - 'tests/**'
+      - 'dbt_project.yml'
+      - 'packages.yml'
 
 jobs:
   test:
