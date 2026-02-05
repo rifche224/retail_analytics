@@ -3,6 +3,6 @@
 select
     order_id,
     order_status
-from {{ ref('stg_orders') }}
-where order_status not in ('pending', 'shipped', 'cancelled', 'completed')
+FROM {{ ref('stg_orders') }} O
+WHERE O.order_status NOT IN ('pending', 'shipped', 'cancelled', 'completed')
 
